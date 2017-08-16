@@ -40,11 +40,15 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
 import java.util.List;
 
 public class ExportCommand extends Command implements IMusicCommand {
+
+    private static final Logger log = LoggerFactory.getLogger(ExportCommand.class);
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
@@ -70,6 +74,7 @@ public class ExportCommand extends Command implements IMusicCommand {
             String url = TextUtils.postToPasteService(out.toString()) + ".fredboat";
             channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("exportPlaylistResulted"), url)).queue();
         } catch (UnirestException ex) {
+            log.error("Exception when uploading exported playlist to hastebin", ex);
             throw new MessagingException(I18n.get(guild).getString("exportPlaylistFail"));
         }
         
