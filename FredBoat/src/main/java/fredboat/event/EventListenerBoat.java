@@ -34,6 +34,7 @@ import fredboat.commandmeta.CommandManager;
 import fredboat.commandmeta.CommandRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.db.EntityReader;
+import fredboat.db.entity.GuildConfig;
 import fredboat.feature.I18n;
 import fredboat.feature.togglz.FeatureFlags;
 import fredboat.util.Tuple2;
@@ -216,7 +217,7 @@ public class EventListenerBoat extends AbstractEventListener {
                 && player.getPlayingTrack() != null
                 && joinedChannel.getMembers().contains(guild.getSelfMember())
                 && player.getHumanUsersInCurrentVC().size() > 0
-                && EntityReader.getGuildConfig(guild.getId()).isAutoResume()
+                && EntityReader.getEntity(guild.getId(), GuildConfig.class).isAutoResume()
                 ) {
             player.getActiveTextChannel().sendMessage(I18n.get(guild).getString("eventAutoResumed")).queue();
             player.setPause(false);

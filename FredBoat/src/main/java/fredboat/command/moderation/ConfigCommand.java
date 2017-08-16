@@ -57,7 +57,7 @@ public class ConfigCommand extends Command implements IModerationCommand, IComma
     }
 
     private void printConfig(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        GuildConfig gc = EntityReader.getGuildConfig(guild.getId());
+        GuildConfig gc = EntityReader.getEntity(guild.getId(), GuildConfig.class);
 
         MessageBuilder mb = new MessageBuilder()
                 .append(MessageFormat.format(I18n.get(guild).getString("configNoArgs") + "\n", guild.getName()))
@@ -79,7 +79,7 @@ public class ConfigCommand extends Command implements IModerationCommand, IComma
             return;
         }
 
-        GuildConfig gc = EntityReader.getGuildConfig(guild.getId());
+        GuildConfig gc = EntityReader.getEntity(guild.getId(), GuildConfig.class);
         String key = args[1];
         String val = args[2];
 
@@ -87,7 +87,7 @@ public class ConfigCommand extends Command implements IModerationCommand, IComma
             case "track_announce":
                 if (val.equalsIgnoreCase("true") | val.equalsIgnoreCase("false")) {
                     gc.setTrackAnnounce(Boolean.valueOf(val));
-                    EntityWriter.mergeGuildConfig(gc);
+                    gc = EntityWriter.merge(gc);
                     TextUtils.replyWithName(channel, invoker, "`track_announce` " + MessageFormat.format(I18n.get(guild).getString("configSetTo"), val));
                 } else {
                     channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("configMustBeBoolean"), invoker.getEffectiveName())).queue();
@@ -96,7 +96,7 @@ public class ConfigCommand extends Command implements IModerationCommand, IComma
             case "auto_resume":
                 if (val.equalsIgnoreCase("true") | val.equalsIgnoreCase("false")) {
                     gc.setAutoResume(Boolean.valueOf(val));
-                    EntityWriter.mergeGuildConfig(gc);
+                    gc = EntityWriter.merge(gc);
                     TextUtils.replyWithName(channel, invoker, "`auto_resume` " + MessageFormat.format(I18n.get(guild).getString("configSetTo"), val));
                 } else {
                     channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("configMustBeBoolean"), invoker.getEffectiveName())).queue();
